@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0042)https://burp.grke.org/docs/quickstart.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<style type="text/css">
+<!--
+#mainlink { text-decoration:none;
+color:#000000;
+background-color:white;}
+P { text-align:justify;}
+-->
+</style>
+<title>
+BURP - BackUp and Restore Program
+</title>
+</head>
+<body bgcolor="LightGrey">
+
+<table width="100%" border="0">
+<tbody><tr>
+<td width="10%"></td>
+<td align="CENTER" width="80%">
+<table border="1" bgcolor="white">
+<tbody><tr>
+<td align="CENTER" width="100%">
+<br>
+<a href="https://burp.grke.org/">
+<img border="0" src="./BURP - BackUp and Restore Program_files/logo.jpg" alt="BURP - BackUp and Restore Program">
+</a>
+
+<!-- @header -->
+
+<table border="0">
+<tbody><tr>
+<td width="12%" valign="top">
+<p>
+</p><table border="0" width="10%" cellspacing="2" cellpadding="2">
+<tbody><tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/index.html" id="mainlink">ABOUT</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/why.html" id="mainlink">WHY</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/features.html" id="mainlink">FEATURES</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/requests.html" id="mainlink">REQUESTS</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/changelog.html" id="mainlink">CHANGELOG</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/news.html" id="mainlink">NEWS</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/faq.html" id="mainlink">FAQ</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/docs.html" id="mainlink">DOCS</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/burpui.html" id="mainlink">BURP-UI</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/download.html" id="mainlink">DOWNLOAD</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/licence.html" id="mainlink">LICENCE</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/contributors.html" id="mainlink">CONTRIBUTORS</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/donations.html" id="mainlink">DONATIONS</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/sponsors.html" id="mainlink">SPONSORS</a></td></tr>
+<tr><td align="RIGHT" width="10%"><a href="https://burp.grke.org/contact.html" id="mainlink">CONTACT</a></td></tr>
+</tbody></table>
+<p></p>
+</td>
+<td width="60%">
+<table>
+<tbody><tr>
+<td align="left">
+
+<p>
+<font color="#000000">
+</font></p><pre><font color="#000000">Quick start
+-----------
+
+The following assumes that you are installing the burp server from source.
+
+You need to compile burp on a unix-based operating system first. Make sure
+that you have openssl, zlib, librsync, and uthash libraries and development
+packages installed.
+
+ - Debian/Ubuntu:
+	apt-get install make pkg-config check g++ \
+		librsync-dev libz-dev libssl-dev uthash-dev
+
+ - RHEL or CentOS 7:
+	yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+	yum install make gcc gcc-c++ bzip2 pkgconfig \
+		librsync-devel libzip-devel openssl-devel uthash-devel \
+		libacl-devel ncurses-devel openssl-perl libcap-devel
+
+ - RHEL or Centos 8:
+	dnf install epel-release
+	dnf --enablerepo=PowerTools list uthash-devel
+	dnf install make gcc librsync-devel openssl-devel libacl-devel \
+		ncurses-devel zlib-devel
+
+After this point, make sure you are standing in the burp source directory. 
+
+If you are taking the source directly from git:
+	Install these extra packages with your distribution's package manager:
+		autoconf automake libtool
+		autoreconf -vif
+
+Now run the configure script, noting that if you are using automake &gt;= 1.16.1,
+you may need to add '--disable-dependency-tracking':
+	./configure --prefix=/usr --sysconfdir=/etc/burp --localstatedir=/var
+
+Then run:
+	make
+
+All being well, burp will compile successfully. Install it as root:
+	make install
+
+Now install configuration files. Note that this will overwrite existing
+configuration files in /etc/burp, so you will probably not want to run this if
+you have an existing burp installation:
+	make install-configs
+
+Start the burp server:
+	burp -c /etc/burp/burp-server.conf
+
+By default, the server will fork into the background and run as a daemon. To
+stay in the foreground, add the '-F' option. The first time that the server
+runs, its startup will be a slower than usual because it needs to generate its
+SSL certificates. However, this will probably only be noticeable on old
+machines.
+
+The server is now ready for clients to connect to it.
+
+
+Unix client
+-----------
+
+If you are going to run the client on the same machine on which you installed
+the server, the client will already be installed because the client is built
+into the same binary (the behaviour of the binary depends upon the
+configuration file that is given to it). Otherwise, you can either go through
+the 'configure/make/make install' sequence on the client machine, or get burp
+via your distribution's package manager.
+
+The example client configuration file is /etc/burp/burp.conf.
+It will backup /home by default.
+
+You can either force a backup by hand:
+	burp -a b
+
+Or add a regular cron job like the following to /etc/cron.d/burp (or
+equivalent). This makes the client ask the server every twenty minutes whether
+it is yet time for a new backup. It is probably a good idea to change the
+numbers for each client, in order to spread the load a bit:
+MAILTO=
+7,27,47 * * * * root    /usr/sbin/burp -a t
+
+Whether or not an instance of the client results in an actual backup depends
+upon the timer settings in the server config files.
+
+
+Windows client
+--------------
+
+Pick the 32-bit or 64-bit Burp installer as appropriate - visit
+http://burp.grke.org/ to find one of them.
+
+If you need to compile one yourself, instructions can be found at
+src/win32/README in the source package.
+
+The Windows installer will ask you for the address of your server, the client
+name, and the client password. Burp will then install its files to:
+C:/Program Files/Burp
+(Note that the "C:/Program Files/" part may differ, depending on Windows'
+language settings).
+If you need to change client configuration settings, the file can be found at:
+C:/Program Files/Burp/burp.conf
+It will be configured to backup "C:/Users", if it existed at installation
+time, or otherwise "C:/Documents and Settings".
+
+A Windows Scheduler task will have been installed and will be configured to
+run every 20 minutes from the time of the installation. Whether or not this
+results in an actual backup depends upon the timer settings in the server
+config files.
+
+To force a backup by hand, start the burp client from within its directory:
+cd "C:\Program Files\Burp\bin"
+burp.exe -a b
+If you are running Windows 7, you might need to start the command prompt with
+"Run as Administrator".
+
+
+Mac client
+----------
+
+The installation on a Mac is performed via Homebrew (http://brew.sh).
+After installing Homebrew, with an admin account you just have to open a
+Terminal and type the command:
+	brew install burp
+
+Burp will be installed in the subdirectories of /usr/local (see Homebrew
+website for details on the subdirectories).
+
+You'll then have to edit the client configuration file:
+/usr/local/etc/burp/burp.conf
+
+At the minimum, you'll have to change the line:
+include = /home
+to something like:
+include = /Users
+
+
+Automated deploy with ansible
+-----------------------------
+
+For ansible roles to manage burp, please see:
+https://github.com/grke/burp/wiki/automated-deploy-and-maintenance
+
+
+For more help, see the man page - type 'man burp'.
+
+
+</font></pre><font color="#000000">
+</font>
+<p></p>
+
+</td>
+</tr>
+</tbody></table>
+</td>
+<td width="8%"></td>
+</tr>
+</tbody></table>
+
+<table width="100%">
+<tbody><tr>
+<td width="10%"></td>
+<td align="center" width="30%">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="hosted_button_id" value="XC8N3XB7T6UFQ">
+<input type="image" src="./BURP - BackUp and Restore Program_files/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online.">
+<img alt="" border="0" src="./BURP - BackUp and Restore Program_files/pixel.gif" width="1" height="1">
+</form>
+<a href="bitcoin:bc1qzgpf8z42klfh62gj3lfyyga6dgx8pfarn2a2vq?label=burp%20donation"><img src="./BURP - BackUp and Restore Program_files/bitcoin-button.png" alt="Donate with Bitcoin" title="Donate with Bitcoin" border="0"></a>
+</td>
+<td align="centre" width="50%">
+<p>
+Burp is open and free software. I work on it in my spare time.
+If you would like this work to continue, please consider making a small
+donation.
+</p>
+</td>
+<td width="10%">
+</td>
+</tr>
+</tbody></table>
+
+<br>
+</td>
+</tr>
+</tbody></table>
+</td><td width="10%"></td>
+</tr>
+
+</tbody></table><table width="100%">
+<tbody><tr>
+<td align="left">
+<font color="#000000">
+Burp, don't suck.
+</font>
+</td>
+<td align="right">
+<font color="#000000">
+Last updated: March 2024
+<br>
+By Graham Keeling
+</font>
+</td>
+</tr>
+</tbody></table>
+
+
+
+
+
+</body></html>
